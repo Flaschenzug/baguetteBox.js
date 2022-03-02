@@ -136,30 +136,6 @@
         }
     };
 
-    // forEach polyfill for IE8
-    // http://stackoverflow.com/a/14827443/1077846
-    /* eslint-disable */
-    if (![].forEach) {
-        Array.prototype.forEach = function(callback, thisArg) {
-            for (var i = 0; i < this.length; i++) {
-                callback.call(thisArg, this[i], i, this);
-            }
-        };
-    }
-
-    // filter polyfill for IE8
-    // https://gist.github.com/eliperelman/1031656
-    if (![].filter) {
-        Array.prototype.filter = function(a, b, c, d, e) {
-            c = this;
-            d = [];
-            for (e = 0; e < c.length; e++)
-                a.call(b, c[e], e, c) && d.push(c[e]);
-            return d;
-        };
-    }
-    /* eslint-enable */
-
     // Script entry point
     function run(selector, userOptions) {
         // Fill supports object
@@ -187,7 +163,7 @@
             }
 
             // Get nodes from gallery elements or single-element galleries
-            var tagsNodeList = [];
+            let tagsNodeList = [];
             if (galleryElement.tagName === 'A') {
                 tagsNodeList = [galleryElement];
             } else {
@@ -742,26 +718,11 @@
     }
 
     function bind(element, event, callback, options) {
-        if (element.addEventListener) {
-            element.addEventListener(event, callback, options);
-        } else {
-            // IE8 fallback
-            element.attachEvent('on' + event, function(event) {
-                // `event` and `event.target` are not provided in IE8
-                event = event || window.event;
-                event.target = event.target || event.srcElement;
-                callback(event);
-            });
-        }
+        element.addEventListener(event, callback, options);
     }
 
     function unbind(element, event, callback, options) {
-        if (element.removeEventListener) {
-            element.removeEventListener(event, callback, options);
-        } else {
-            // IE8 fallback
-            element.detachEvent('on' + event, callback);
-        }
+        element.removeEventListener(event, callback, options);
     }
 
     function getByID(id) {
